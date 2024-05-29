@@ -2,7 +2,7 @@
 
 namespace HaveFun_01.Controllers
 {
-    public class PracticeController : Controller
+    public class TIM01Controller : Controller
     {
         public IActionResult Index()
         {
