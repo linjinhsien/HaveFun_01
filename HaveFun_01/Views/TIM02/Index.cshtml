@@ -1,0 +1,28 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GeolocationBooking</title>
+    <script>
+        function getLocation() {
+          if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(successCallback, errorCallback);
+          } else {
+            alert("Geolocation is not supported by this browser.");
+          }
+        }
+
+        function successCallback(position) {
+          console.log("Success: ", position.coords.latitude, position.coords.longitude);
+
+        }
+
+        function errorCallback(error) {
+          console.log("Error: ", error);
+        }
+    </script>
+</head>
+<body onload="getLocation()">
+</body>
+</html>
