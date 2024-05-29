@@ -1,29 +1,53 @@
-﻿<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GeolocationBooking</title>
+﻿@{
+    ViewData["Title"] = "Geolocation Booking";
+}
+
+    <title>@ViewData["Title"]</title>
+    <head>
     <script>
         function getLocation() {
-          if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(successCallback, errorCallback);
-          } else {
-            alert("Geolocation is not supported by this browser.");
-          }
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(successCallback, errorCallback);
+            } else {
+                alert("Geolocation is not supported by this browser.");
+            }
         }
 
         function successCallback(position) {
-          console.log("Success: ", position.coords.latitude, position.coords.longitude);
+            const latitude = position.coords.latitude;
+            const longitude = position.coords.longitude;
+            const url = getGoogleMapsUrl(latitude, longitude);
+            console.log(`Success: Latitude: ${latitude}, Longitude: ${longitude}, URL: ${url}`);
 
+            // Store latitude and longitude in localStorage
+            localStorage.setItem('latitude', latitude);
+            localStorage.setItem('longitude', longitude);
+
+            // Display latitude, longitude, and URL link on the webpage
+            const locationInfo = document.createElement('div');
+            locationInfo.innerHTML = `Latitude: ${latitude}<br>Longitude: ${longitude}<br><a href="${url}" target="_blank">Open in Google Maps</a>`;
+            document.body.appendChild(locationInfo);
         }
 
         function errorCallback(error) {
-          console.log("Error: ", error);
+            console.log("Error: ", error);
+            alert(`Error retrieving geolocation: ${error.message}`);
+        }
+
+        function getGoogleMapsUrl(latitude, longitude) {
+            const baseUrl = 'https://www.google.com.tw/maps/';
+            const query = `@@${latitude},${longitude},15z`;
+            const params = {
+                entry: 'ttu'
+            };
+            const paramsString = new URLSearchParams(params).toString();
+            return `${baseUrl}${query}?${paramsString}`;
         }
     </script>
 </head>
 <body onload="getLocation()">
     <h1>TIM02</h1>
-</body>
-</html>
+    <div class="access_map">
+        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d105111.88622656197!2d-58.526502463231886!3d-34.585281759040384!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x95bccb1279b19e03%3A0x4189fef021d7ace8!2z6Zi_5qC55bu35bed6aaZ6Zaj!5e0!3m2!1szh-TW!2stw!4v1716957943106!5m2!1szh-TW!2stw" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+    </div>
+   </body>
