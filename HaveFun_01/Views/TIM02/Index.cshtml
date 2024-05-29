@@ -1,29 +1,50 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GeolocationBooking</title>
-    <script>
-        function getLocation() {
-          if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(successCallback, errorCallback);
-          } else {
-            alert("Geolocation is not supported by this browser.");
-          }
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GeolocationBooking</title>
+  <script>
+    function getLocation() {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(successCallback, errorCallback);
+      } else {
+        alert("Geolocation is not supported by this browser.");
+      }
+    }
 
-        function successCallback(position) {
-          console.log("Success: ", position.coords.latitude, position.coords.longitude);
+    function successCallback(position) {
+      const latitude = position.coords.latitude;
+      const longitude = position.coords.longitude;
+      const url = getGoogleMapsUrl(latitude, longitude);
+      console.log(`Success: Latitude: ${latitude}, Longitude: ${longitude}, URL: ${url}`);
 
-        }
+      // 存儲經緯度到 localStorage
+      localStorage.setItem('latitude', latitude);
+      localStorage.setItem('longitude', longitude);
 
-        function errorCallback(error) {
-          console.log("Error: ", error);
-        }
-    </script>
+      // 在網頁上顯示經緯度和 URL 連結
+      const locationInfo = document.createElement('div');
+      locationInfo.innerHTML = `Latitude: ${latitude}<br>Longitude: ${longitude}<br><a href="${url}" target="_blank">Open in Google Maps</a>`;
+      document.body.appendChild(locationInfo);
+    }
+
+    function errorCallback(error) {
+      console.log("Error: ", error);
+    }
+
+    function getGoogleMapsUrl(latitude, longitude) {
+      const baseUrl = 'https://www.google.com.tw/maps/';
+      const query = `@@${latitude},${longitude}`;
+      const params = {
+        entry: 'ttu'
+      };
+      const paramsString = new URLSearchParams(params).toString();
+      return `${baseUrl}${query},${paramsString}`;
+    }
+  </script>
 </head>
 <body onload="getLocation()">
-    <h1>TIM02</h1>
+  <h1>TIM02</h1>
 </body>
 </html>
